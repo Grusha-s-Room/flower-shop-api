@@ -8,8 +8,9 @@ import lombok.*;
 @Data
 @Builder
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
-public class UserEntity {
+public class UserEntity extends Auditable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
