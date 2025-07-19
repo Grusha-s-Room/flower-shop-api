@@ -29,6 +29,12 @@ services:
   quarkus_api:
     restart: always
     container_name: flower-shop-api-container
+    volumes:
+      - ./privateKey.pem:/app/keys/privateKey.pem:ro
+      - ./publicKey.pem:/app/keys/publicKey.pem:ro
+    environment:
+      - PRIVATE_KEY_PATH=/app/keys/privateKey.pem
+      - PUBLIC_KEY_PATH=/app/keys/publicKey.pem
     deploy:
       resources:
         limits:

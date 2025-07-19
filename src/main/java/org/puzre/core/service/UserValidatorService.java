@@ -26,7 +26,7 @@ public class UserValidatorService implements IUserValidatorService {
     }
 
     @Override
-    public void validatePassword(String password) {
+    public void validateSignUpPassword(String password) {
         if (password.length() < 8)
             throw new BadRequestException("password must have at least 8 characters");
         if (password.length() > 20)
@@ -45,6 +45,12 @@ public class UserValidatorService implements IUserValidatorService {
     public void validatePhone(String phone) {
         if (phone.length() != 13)
             throw new BadRequestException("invalid phone");
+    }
+
+    @Override
+    public void validateLoginPassword(String password) {
+        if (password.isBlank() || password.length() > 20)
+            throw new BadRequestException("password is too long");
     }
 
 }
