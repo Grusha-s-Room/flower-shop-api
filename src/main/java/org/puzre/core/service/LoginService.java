@@ -2,6 +2,8 @@ package org.puzre.core.service;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import org.puzre.core.domain.LoginUser;
+import org.puzre.core.domain.Token;
+import org.puzre.core.port.auth.ITokenProvider;
 import org.puzre.core.port.respository.IUserRepository;
 import org.puzre.core.port.service.IEncoderService;
 import org.puzre.core.port.service.ILoginService;
@@ -13,15 +15,19 @@ public class LoginService implements ILoginService {
     private final IUserValidatorService iUserValidatorService;
     private final IEncoderService iEncoderService;
 
+    private final ITokenProvider iTokenProvider;
+
     private final IUserRepository iUserRepository;
 
     public LoginService(
             IUserValidatorService iUserValidatorService,
             IEncoderService iEncoderService,
+            ITokenProvider iTokenProvider,
             IUserRepository iUserRepository
     ){
         this.iUserValidatorService = iUserValidatorService;
         this.iUserRepository = iUserRepository;
+        this.iTokenProvider = iTokenProvider;
         this.iEncoderService = iEncoderService;
     }
 
@@ -37,7 +43,9 @@ public class LoginService implements ILoginService {
 
         iEncoderService.passwordMatches(loginUser.getPassword(), userAccount.getPassword());
 
-        userAccount.setJwt("I'm a jwt");
+        Token token = iTokenProvider.generateToken(userAccount);
+
+        userAccount.setAuth(token);
 
         return userAccount;
     }

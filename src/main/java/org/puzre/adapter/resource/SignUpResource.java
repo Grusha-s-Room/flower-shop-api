@@ -1,5 +1,6 @@
 package org.puzre.adapter.resource;
 
+import jakarta.annotation.security.PermitAll;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -28,6 +29,7 @@ public class SignUpResource {
 
     @Path("/sign-up")
     @POST
+    @PermitAll
     public Response signUp(SignUpUserRequestDto signUpUserRequestDto) {
         User user = iUserRequestMapper.toDomain(signUpUserRequestDto);
         iSignUpService.signUp(user);

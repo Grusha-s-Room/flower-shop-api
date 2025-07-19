@@ -1,5 +1,6 @@
 package org.puzre.adapter.resource;
 
+import jakarta.annotation.security.PermitAll;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -28,6 +29,7 @@ public class LoginResource {
 
     @Path("/login")
     @POST
+    @PermitAll
     public Response login(LoginUserRequestDto loginUserRequestDto) {
         LoginUser loginUserInput = iLoginUserMapper.toDomain(loginUserRequestDto);
         LoginUser loginUserOutput = iLoginService.login(loginUserInput);

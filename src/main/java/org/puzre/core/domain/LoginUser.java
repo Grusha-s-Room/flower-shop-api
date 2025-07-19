@@ -17,6 +17,6 @@ public class LoginUser {
     private String email;
     private String password;
     private String phone;
-    private String jwt;
+    private Token auth;
 
 }
