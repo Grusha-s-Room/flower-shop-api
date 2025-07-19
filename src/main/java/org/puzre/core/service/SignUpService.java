@@ -30,7 +30,7 @@ public class SignUpService implements ISignUpService {
         iUserValidatorService.validateSurname(user.getSurname());
         iUserValidatorService.validateEmail(user.getEmail());
         iUserValidatorService.validatePhone(user.getPhone());
-        iUserValidatorService.validatePassword(user.getPassword());
+        iUserValidatorService.validateSignUpPassword(user.getPassword());
 
         System.out.println("pass validations");
 
