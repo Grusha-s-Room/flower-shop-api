@@ -28,14 +28,14 @@ public class JwtTokenUtils {
         return generateTokenString(pk, privateKeyPath, claims);
     }
 
-    public static JwtClaims getTokenProperties(String jwt, String publicKeyPath, String issuer, String email, String audience) throws Exception {
+    public static JwtClaims getTokenProperties(String jwt, String publicKeyPath, String issuer, Long userId, String audience) throws Exception {
         PublicKey pk = readPublicKey(publicKeyPath);
         JwtConsumer jwtConsumer = new JwtConsumerBuilder()
                 .setRequireExpirationTime()
                 .setExpectedIssuer(issuer)
                 .setRequireJwtId()
                 .setExpectedAudience(audience)
-                .setExpectedSubject(email)
+                .setExpectedSubject(userId.toString())
                 .setVerificationKey(pk)
                 .build();
         return jwtConsumer.processToClaims(jwt);

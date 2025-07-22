@@ -44,15 +44,13 @@ public class JwtTokenProvider implements ITokenProvider {
             jwtClaims.setIssuer(issuer);
             jwtClaims.setJwtId(UUID.randomUUID().toString());
             jwtClaims.setAudience(audience);
-            jwtClaims.setSubject(loginUser.getEmail());
-            jwtClaims.setClaim(Claims.upn.name(), loginUser.getEmail());
-            jwtClaims.setClaim(Claims.phone_number.name(), loginUser.getPhone());
+            jwtClaims.setSubject(loginUser.getId().toString());
             jwtClaims.setClaim(Claims.groups.name(), Collections.singletonList(userRole));
             jwtClaims.setExpirationTimeMinutesInTheFuture(expirationTimeMinutes);
 
             String token = JwtTokenUtils.generateTokenString(jwtClaims, privateKeyPath);
 
-            JwtClaims jwtProperties = JwtTokenUtils.getTokenProperties(token, publicKeyPath, issuer, loginUser.getEmail(), audience);
+            JwtClaims jwtProperties = JwtTokenUtils.getTokenProperties(token, publicKeyPath, issuer, loginUser.getId(), audience);
 
             return Token.builder()
                     .token(token)
