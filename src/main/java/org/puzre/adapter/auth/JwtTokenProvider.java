@@ -1,9 +1,9 @@
 package org.puzre.adapter.auth;
 
 import jakarta.enterprise.context.ApplicationScoped;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.jwt.Claims;
 import org.jose4j.jwt.JwtClaims;
+import org.puzre.adapter.configuration.JwtConfiguration;
 import org.puzre.core.domain.LoginUser;
 import org.puzre.core.domain.Token;
 import org.puzre.core.exception.BadRequestException;
@@ -16,23 +16,11 @@ import java.util.concurrent.TimeUnit;
 @ApplicationScoped
 public class JwtTokenProvider implements ITokenProvider {
 
-    @ConfigProperty(name = "app.jwt.user-role")
-    String userRole;
+    private final JwtConfiguration jwtConfiguration;
 
-    @ConfigProperty(name = "mp.jwt.verify.issuer")
-    String issuer;
-
-    @ConfigProperty(name = "mp.jwt.verify.audiences")
-    String audience;
-
-    @ConfigProperty(name = "mp.jwt.verify.publickey.location")
-    String publicKeyPath;
-
-    @ConfigProperty(name = "app.jwt.private-key-path")
-    String privateKeyPath;
-
-    @ConfigProperty(name = "app.jwt.expiration-time-minutes")
-    int expirationTimeMinutes;
+    public JwtTokenProvider(JwtConfiguration jwtConfiguration) {
+        this.jwtConfiguration = jwtConfiguration;
+    }
 
     @Override
     public Token generateToken(LoginUser loginUser) {
@@ -41,21 +29,25 @@ public class JwtTokenProvider implements ITokenProvider {
 
             JwtClaims jwtClaims = new JwtClaims();
 
-            jwtClaims.setIssuer(issuer);
+            jwtClaims.setIssuer(jwtConfiguration.issuer());
             jwtClaims.setJwtId(UUID.randomUUID().toString());
-            jwtClaims.setAudience(audience);
+            jwtClaims.setAudience(jwtConfiguration.audience());
             jwtClaims.setSubject(loginUser.getId().toString());
-            jwtClaims.setClaim(Claims.groups.name(), Collections.singletonList(userRole));
-            jwtClaims.setExpirationTimeMinutesInTheFuture(expirationTimeMinutes);
+            jwtClaims.setClaim(Claims.groups.name(), Collections.singletonList(jwtConfiguration.userRole()));
+            jwtClaims.setExpirationTimeMinutesInTheFuture(jwtConfiguration.expirationTimeMinutes());
 
-            String token = JwtTokenUtils.generateTokenString(jwtClaims, privateKeyPath);
+            String token = JwtTokenUtils.generateTokenString(jwtClaims, jwtConfiguration.privateKeyPath());
 
-            JwtClaims jwtProperties = JwtTokenUtils.getTokenProperties(token, publicKeyPath, issuer, loginUser.getId(), audience);
+            JwtClaims jwtProperties = JwtTokenUtils.getTokenProperties(token,
+                    jwtConfiguration.publicKeyPath(),
+                    jwtConfiguration.issuer(),
+                    loginUser.getId(),
+                    jwtConfiguration.audience());
 
             return Token.builder()
                     .token(token)
                     .issuedAt(jwtProperties.getIssuedAt().getValue())
-                    .expiresIn(TimeUnit.MINUTES.toMillis(expirationTimeMinutes))
+                    .expiresIn(TimeUnit.MINUTES.toMillis(jwtConfiguration.expirationTimeMinutes()))
                     .build();
 
         } catch (Exception e) {
