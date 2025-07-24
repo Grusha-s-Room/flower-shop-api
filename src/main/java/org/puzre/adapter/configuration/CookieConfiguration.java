@@ -7,7 +7,6 @@ import jakarta.enterprise.context.ApplicationScoped;
 @ApplicationScoped
 public interface CookieConfiguration {
 
-    String name();
     String path();
     String domain();
     boolean secure();

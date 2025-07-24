@@ -12,6 +12,7 @@ public interface JwtConfiguration {
     String audience();
     String userRole();
     String privateKeyPath();
-    long expirationTimeMinutes();
+    int expirationTimeMinutes();
+    String cookieName();
 
 }

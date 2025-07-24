@@ -48,6 +48,7 @@ public class JwtTokenProvider implements ITokenProvider {
                     .token(token)
                     .issuedAt(jwtProperties.getIssuedAt().getValue())
                     .expiresIn(TimeUnit.MINUTES.toMillis(jwtConfiguration.expirationTimeMinutes()))
+                    .cookeName(jwtConfiguration.cookieName())
                     .build();
 
         } catch (Exception e) {

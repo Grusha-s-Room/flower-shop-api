@@ -1,8 +1,10 @@
 package org.puzre.core.service;
 
 import jakarta.enterprise.context.ApplicationScoped;
+import org.puzre.core.domain.Cookie;
 import org.puzre.core.domain.LoginUser;
 import org.puzre.core.domain.Token;
+import org.puzre.core.port.auth.ICookieProvider;
 import org.puzre.core.port.auth.ITokenProvider;
 import org.puzre.core.port.respository.IUserRepository;
 import org.puzre.core.port.service.IEncoderService;
@@ -16,6 +18,7 @@ public class LoginService implements ILoginService {
     private final IEncoderService iEncoderService;
 
     private final ITokenProvider iTokenProvider;
+    private final ICookieProvider iCookieProvider;
 
     private final IUserRepository iUserRepository;
 
@@ -23,11 +26,13 @@ public class LoginService implements ILoginService {
             IUserValidatorService iUserValidatorService,
             IEncoderService iEncoderService,
             ITokenProvider iTokenProvider,
+            ICookieProvider iCookieProvider,
             IUserRepository iUserRepository
     ){
         this.iUserValidatorService = iUserValidatorService;
         this.iUserRepository = iUserRepository;
         this.iTokenProvider = iTokenProvider;
+        this.iCookieProvider = iCookieProvider;
         this.iEncoderService = iEncoderService;
     }
 
@@ -45,7 +50,9 @@ public class LoginService implements ILoginService {
 
         Token token = iTokenProvider.generateToken(userAccount);
 
-        userAccount.setAuth(token);
+        Cookie cookie = iCookieProvider.createCookie(token.getCookeName(), token.getToken(), token.getExpiresIn());
+
+        userAccount.setCookie(cookie);
 
         return userAccount;
     }
