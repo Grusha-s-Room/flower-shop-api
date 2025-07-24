@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class Token {
 
     private String token;
+    private String cookeName;
     private long issuedAt;
     private long expiresIn;
 

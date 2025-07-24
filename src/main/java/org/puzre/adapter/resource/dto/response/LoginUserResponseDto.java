@@ -15,5 +15,4 @@ public class LoginUserResponseDto {
     private String surname;
     private String phone;
     private String email;
-    private TokenResponseDto auth;
 }
