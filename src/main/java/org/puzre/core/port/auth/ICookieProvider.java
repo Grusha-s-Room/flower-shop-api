@@ -4,6 +4,6 @@ import org.puzre.core.domain.Cookie;
 
 public interface ICookieProvider {
 
-    Cookie createCookie(String name, String token, long maxAge);
+    Cookie createCookie(String name, String token, long maxAge, String path);
 
 }

@@ -5,6 +5,8 @@ import org.puzre.core.domain.Token;
 
 public interface ITokenProvider {
 
-    Token generateToken(LoginUser loginUser);
+    Token generateMainToken(LoginUser loginUser);
+
+    Token generateRefreshToken(LoginUser loginUser);
 
 }

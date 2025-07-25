@@ -15,12 +15,12 @@ public class CookieProvider implements ICookieProvider {
     }
 
     @Override
-    public Cookie createCookie(String name, String token, long maxAge) {
+    public Cookie createCookie(String name, String token, long maxAge, String path) {
         return Cookie.builder()
                 .name(name)
                 .value(token)
                 .maxAge(Integer.parseInt(String.valueOf(maxAge)))
-                .path(cookieConfiguration.path())
+                .path(path)
                 .domain(cookieConfiguration.domain())
                 .secure(cookieConfiguration.secure())
                 .httpOnly(cookieConfiguration.httpOnly())

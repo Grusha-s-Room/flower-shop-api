@@ -48,9 +48,9 @@ public class LoginService implements ILoginService {
 
         iEncoderService.passwordMatches(loginUser.getPassword(), userAccount.getPassword());
 
-        Token token = iTokenProvider.generateToken(userAccount);
+        Token token = iTokenProvider.generateMainToken(userAccount);
 
-        Cookie cookie = iCookieProvider.createCookie(token.getCookeName(), token.getToken(), token.getExpiresIn());
+        Cookie cookie = iCookieProvider.createCookie(token.getCookieName(), token.getToken(), token.getExpiresIn(), token.getCookiePath());
 
         userAccount.setCookie(cookie);
 

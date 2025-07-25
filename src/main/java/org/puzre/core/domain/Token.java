@@ -12,8 +12,8 @@ import lombok.NoArgsConstructor;
 public class Token {
 
     private String token;
-    private String cookeName;
-    private long issuedAt;
+    private String cookieName;
+    private String cookiePath;
     private long expiresIn;
 
 }
