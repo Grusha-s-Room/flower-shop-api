@@ -3,6 +3,8 @@ package org.puzre.adapter.repository.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "users")
 @Data
@@ -31,6 +33,9 @@ public class UserEntity extends Auditable {
 
     @Column(name = "password", nullable = false, length = 200)
     private String password;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    private List<RefreshTokenEntity> refreshTokens;
 
 }
 

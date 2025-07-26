@@ -40,8 +40,13 @@ public class LoginResource {
         LoginUser loginUserInput = iLoginUserMapper.toDomain(loginUserRequestDto);
         LoginUser loginUserOutput = iLoginService.login(loginUserInput);
         LoginUserResponseDto loginUserResponseDto = iLoginUserMapper.toResponseDto(loginUserOutput);
-        NewCookie cookie = iCookieMapper.toResponseDto(loginUserOutput.getCookie());
-        return Response.ok().entity(loginUserResponseDto).cookie(cookie).build();
+        NewCookie mainTokenCookie = iCookieMapper.toResponseDto(loginUserOutput.getMainTokenCookie());
+        NewCookie refreshTokenCookie = iCookieMapper.toResponseDto(loginUserOutput.getRefreshTokenCookie());
+        return Response.ok()
+                .entity(loginUserResponseDto)
+                .cookie(mainTokenCookie)
+                .cookie(refreshTokenCookie)
+                .build();
     }
 
 }

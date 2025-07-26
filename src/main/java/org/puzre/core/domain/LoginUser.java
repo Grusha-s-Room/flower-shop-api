@@ -17,6 +17,7 @@ public class LoginUser {
     private String email;
     private String password;
     private String phone;
-    private Cookie cookie;
+    private Cookie mainTokenCookie;
+    private Cookie refreshTokenCookie;
 
 }

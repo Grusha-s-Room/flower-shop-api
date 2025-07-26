@@ -6,8 +6,8 @@ import org.jose4j.jwt.JwtClaims;
 import org.puzre.adapter.configuration.JwtConfiguration;
 import org.puzre.adapter.configuration.JwtMainTokenConfiguration;
 import org.puzre.adapter.configuration.JwtRefreshTokenConfiguration;
-import org.puzre.core.domain.LoginUser;
 import org.puzre.core.domain.Token;
+import org.puzre.core.domain.User;
 import org.puzre.core.exception.BadRequestException;
 import org.puzre.core.port.auth.ITokenProvider;
 
@@ -31,7 +31,7 @@ public class JwtTokenProvider implements ITokenProvider {
     }
 
     @Override
-    public Token generateMainToken(LoginUser loginUser) {
+    public Token generateMainToken(User user) {
 
         try {
 
@@ -40,7 +40,7 @@ public class JwtTokenProvider implements ITokenProvider {
             jwtClaims.setIssuer(jwtConfiguration.issuer());
             jwtClaims.setJwtId(UUID.randomUUID().toString());
             jwtClaims.setAudience(jwtConfiguration.audience());
-            jwtClaims.setSubject(loginUser.getId().toString());
+            jwtClaims.setSubject(user.getId().toString());
             jwtClaims.setClaim(Claims.groups.name(), Collections.singletonList(jwtConfiguration.userRole()));
             jwtClaims.setExpirationTimeMinutesInTheFuture(jwtMainTokenConfiguration.expirationTimeMinutes());
 
@@ -60,11 +60,32 @@ public class JwtTokenProvider implements ITokenProvider {
     }
 
     @Override
-    public Token generateRefreshToken(LoginUser loginUser) {
+    public Token generateRefreshToken(User user) {
 
+        try {
 
+            JwtClaims jwtClaims = new JwtClaims();
 
-        return null;
+            jwtClaims.setIssuer(jwtConfiguration.issuer());
+            jwtClaims.setJwtId(UUID.randomUUID().toString());
+            jwtClaims.setAudience(jwtConfiguration.audience());
+            jwtClaims.setSubject(user.getId().toString());
+            jwtClaims.setClaim(Claims.groups.name(), Collections.singletonList(jwtConfiguration.userRole()));
+            jwtClaims.setExpirationTimeMinutesInTheFuture(jwtRefreshTokenConfiguration.expirationTimeMinutes());
+
+            String token = JwtTokenUtils.generateTokenString(jwtClaims, jwtConfiguration.privateKeyPath());
+
+            return Token.builder()
+                    .token(token)
+                    .expiresIn(TimeUnit.MINUTES.toMillis(jwtRefreshTokenConfiguration.expirationTimeMinutes()))
+                    .cookieName(jwtRefreshTokenConfiguration.cookieName())
+                    .cookiePath(jwtRefreshTokenConfiguration.cookiePath())
+                    .build();
+
+        } catch (Exception e) {
+            throw new BadRequestException(e.getMessage());
+        }
+
     }
 
 }

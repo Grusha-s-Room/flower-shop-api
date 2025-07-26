@@ -32,17 +32,11 @@ public class SignUpService implements ISignUpService {
         iUserValidatorService.validatePhone(user.getPhone());
         iUserValidatorService.validateSignUpPassword(user.getPassword());
 
-        System.out.println("pass validations");
-
         iUserRepository.verifyEmail(user.getEmail());
         iUserRepository.verifyEmail(user.getPhone());
 
-        System.out.println("pass db validations");
-
         String hashedPassword = iEncoderService.hash(user.getPassword());
         user.setPassword(hashedPassword);
-
-        System.out.println("pass hash password");
 
         iUserRepository.save(user);
 

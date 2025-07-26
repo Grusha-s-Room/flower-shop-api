@@ -19,20 +19,28 @@ public class RefreshTokenEntity extends Auditable {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "refresh_token", nullable = false, unique = true)
+    @Column(name = "refresh_token", nullable = false, unique = true, length = 1000)
     private String refreshToken;
-
-    @Column(name = "client_ip", length = 30, nullable = false)
-    private String clientIp;
 
     @Column(name = "expires_at", nullable = false)
     private Instant expiresAt;
 
+    @Builder.Default
     @Column(name = "valid", nullable = false)
     private boolean valid = true;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "rotated_from")
-    private RefreshTokenEntity rotatedFrom;
+    @Column(name = "rotated_from")
+    private Long rotatedFrom;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id", nullable = false)
+    private UserEntity user;
+
+    public void update(RefreshTokenEntity refreshTokenEntity) {
+        this.refreshToken = (refreshTokenEntity.getRefreshToken() != null) ? refreshTokenEntity.getRefreshToken() : this.refreshToken;
+        this.expiresAt = (refreshTokenEntity.getExpiresAt() != null) ? refreshTokenEntity.getExpiresAt() : this.expiresAt;
+        this.valid = refreshTokenEntity.isValid();
+        this.rotatedFrom = (refreshTokenEntity.getRotatedFrom() != null) ? refreshTokenEntity.getRotatedFrom() : this.rotatedFrom;
+    }
 
 }
